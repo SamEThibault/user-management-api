@@ -22,15 +22,12 @@ env = environ.Env(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-if env("ENV_FILE"):
-    env_file = os.path.join(BASE_DIR, env("ENV_FILE"))
-    print(f"[INFO] Using env file: {env_file}")
-    assert os.path.isfile(
-        env_file
-    ), f"Env file '{env_file}' does not exist or is not a regular file"
-    env.read_env(env_file)
-else:
-    raise Exception("Error: no environment file was configured")
+env_file = os.path.join(BASE_DIR, env("ENV_FILE"))
+print(f"[INFO] Using env file: {env_file}")
+assert os.path.isfile(
+    env_file
+), f"Env file '{env_file}' does not exist or is not a regular file"
+env.read_env(env_file)
 
 
 
