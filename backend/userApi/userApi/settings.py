@@ -11,16 +11,34 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+
+env = environ.Env(
+    SECRET_KEY=(str, ""),
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+if env("ENV_FILE"):
+    env_file = os.path.join(BASE_DIR, env("ENV_FILE"))
+    print(f"[INFO] Using env file: {env_file}")
+    assert os.path.isfile(
+        env_file
+    ), f"Env file '{env_file}' does not exist or is not a regular file"
+    env.read_env(env_file)
+else:
+    raise Exception("Error: no environment file was configured")
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure--l-+0x^jdx9de5j)$v3)4j$o3aum-qqg46pl7x2!g=_wi@cd%3"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +55,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
